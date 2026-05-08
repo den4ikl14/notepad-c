@@ -25,4 +25,6 @@ struct Editor {
     void render();
     void handleInput();
     void saveState();
+
+    void adjustScroll(); 
 };
