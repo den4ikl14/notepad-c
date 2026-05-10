@@ -19,6 +19,9 @@ void Editor::handleInput() {
     if (key == 17) {
         exit(0);
     }
+        else if (key == 19) {
+    saveFile();
+}
     else if (key == 224) {
         int arrow = _getch();
 
