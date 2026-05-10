@@ -90,3 +90,31 @@ void Editor::run() {
         handleInput();
     }
 }
+
+void Editor::saveFile() {
+    if (filename.empty()) {
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+        int screenHeight = csbi.srWindow.Bottom - csbi.srWindow.Top - 2;
+
+        gotoxy(0, screenHeight + 1);
+        std::cout << std::string(80, ' ');
+        gotoxy(0, screenHeight + 1);
+        std::cout << "Введiть iм'я файлу: ";
+        std::cin >> filename;
+
+        if (filename.find('.') == std::string::npos) {
+            filename += ".txt";
+        }
+    }
+
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        for (int i = 0; i < (int)lines.size(); i++) {
+            file << lines[i];
+            if (i < (int)lines.size() - 1) file << "\n";
+        }
+        file.close();
+        modified = false;
+    }
+}
