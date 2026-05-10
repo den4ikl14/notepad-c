@@ -1,5 +1,6 @@
 #include "editor.h"
 #include <iostream>
+#include <fstream>
 #include <sstream>
 
 void gotoxy(int x, int y) {
@@ -39,7 +40,7 @@ int countChars(const std::vector<std::string>& lines) {
 
 void Editor::render() {
     clearScreen();
-    
+
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     int screenHeight = csbi.srWindow.Bottom - csbi.srWindow.Top - 2;
@@ -52,16 +53,16 @@ void Editor::render() {
     }
 
     gotoxy(0, screenHeight + 1);
-    std::string status = filename.empty() ? "Новий файл" : filename;
+    std::string status = filename.empty() ? "New file" : filename;
     if (modified) status += " *";
-    status += "  |  Рядок: " + std::to_string(cursorY + 1);
-    status += "  Стовпець: " + std::to_string(cursorX + 1);
-    status += "  |  Слів: " + std::to_string(countWords(lines));
-    status += "  Символів: " + std::to_string(countChars(lines));
+    status += "  |  Line: " + std::to_string(cursorY + 1);
+    status += "  Column: " + std::to_string(cursorX + 1);
+    status += "  |  Words: " + std::to_string(countWords(lines));
+    status += "  Chars: " + std::to_string(countChars(lines));
     std::cout << status;
 
     gotoxy(0, screenHeight + 2);
-    std::cout << "Ctrl+S Зберегти | Ctrl+F Пошук | Ctrl+H Заміна | Ctrl+Z Відміна | Ctrl+Q Вихід";
+    std::cout << "Ctrl+S Save | Ctrl+F Find | Ctrl+H Replace | Ctrl+Z Undo | Ctrl+Q Exit";
 
     gotoxy(cursorX + 4, cursorY - scrollY);
 }
@@ -76,21 +77,6 @@ void Editor::saveState() {
     }
 }
 
-void Editor::run() {
-    lines.push_back("");
-    cursorX = 0;
-    cursorY = 0;
-    scrollY = 0;
-    modified = false;
-    undoTop = -1;
-    redoTop = -1;
-
-    while (true) {
-        render();
-        handleInput();
-    }
-}
-
 void Editor::saveFile() {
     if (filename.empty()) {
         CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -100,7 +86,7 @@ void Editor::saveFile() {
         gotoxy(0, screenHeight + 1);
         std::cout << std::string(80, ' ');
         gotoxy(0, screenHeight + 1);
-        std::cout << "Введiть iм'я файлу: ";
+        std::cout << "Enter filename: ";
         std::cin >> filename;
 
         if (filename.find('.') == std::string::npos) {
@@ -116,5 +102,20 @@ void Editor::saveFile() {
         }
         file.close();
         modified = false;
+    }
+}
+
+void Editor::run() {
+    lines.push_back("");
+    cursorX = 0;
+    cursorY = 0;
+    scrollY = 0;
+    modified = false;
+    undoTop = -1;
+    redoTop = -1;
+
+    while (true) {
+        render();
+        handleInput();
     }
 }
