@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <fstream>
 #include <windows.h>
 
 #define MAX_UNDO 100
@@ -25,6 +26,6 @@ struct Editor {
     void render();
     void handleInput();
     void saveState();
-
-    void adjustScroll(); 
+    void saveFile();
+    void adjustScroll();
 };
