@@ -19,9 +19,41 @@ void Editor::handleInput() {
     if (key == 17) {
         exit(0);
     }
-        else if (key == 19) {
-    saveFile();
-}
+    else if (key == 19) {
+        saveFile();
+    }
+    else if (key == 26) {
+        if (undoTop >= 0) {
+            if (redoTop < MAX_UNDO - 1) {
+                redoTop++;
+                redoStack[redoTop].lines = lines;
+                redoStack[redoTop].cursorX = cursorX;
+                redoStack[redoTop].cursorY = cursorY;
+            }
+            lines = undoStack[undoTop].lines;
+            cursorX = undoStack[undoTop].cursorX;
+            cursorY = undoStack[undoTop].cursorY;
+            undoTop--;
+            modified = true;
+            adjustScroll();
+        }
+    }
+    else if (key == 25) {
+        if (redoTop >= 0) {
+            if (undoTop < MAX_UNDO - 1) {
+                undoTop++;
+                undoStack[undoTop].lines = lines;
+                undoStack[undoTop].cursorX = cursorX;
+                undoStack[undoTop].cursorY = cursorY;
+            }
+            lines = redoStack[redoTop].lines;
+            cursorX = redoStack[redoTop].cursorX;
+            cursorY = redoStack[redoTop].cursorY;
+            redoTop--;
+            modified = true;
+            adjustScroll();
+        }
+    }
     else if (key == 224) {
         int arrow = _getch();
 
