@@ -14,7 +14,7 @@
 * **API:** WinAPI (Windows.h)
 * **Текстовий компонент:** RichEdit (Msftedit.dll)
 * **Робота з файлами:** WinAPI (CreateFile, ReadFile, WriteFile)
-* * **Контейнери:** std::vector
+* **Контейнери:** std::vector
 * **Робота зі строками:** std::wstring
 
 
